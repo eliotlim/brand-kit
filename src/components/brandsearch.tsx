@@ -7,17 +7,24 @@ interface BrandSearchProps{
 export default function BrandSearch(props: BrandSearchProps) {
 
   const [result, setResult] = useState<Record<string, string>>({});
+  const [brand, setBrand] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const onSubmit = useCallback(async (event: FormData) => {
-    const response = await props.search(event);
+  const onSubmit = useCallback(async () => {
+    setSubmitting(true);
+    const formdata = new FormData();
+    formdata.set('brand', brand);
+    const response = await props.search(formdata);
     if ('error' in response) {
       console.error(response.error);
       setResult(response.error);
+      setSubmitting(false);
       return;
     }
 
     setResult(response.result);
-  }, [props]);
+    setSubmitting(false);
+  }, [brand, props]);
 
   return (
     <div className="text-center">
@@ -30,14 +37,19 @@ export default function BrandSearch(props: BrandSearchProps) {
             type="text"
             name="brand"
             placeholder={"Search for a brand"}
+            value={brand}
+            onChange={(event) => setBrand(event.target.value)}
           >
           </input>
-          <input
+          <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            value={"Search"}
+            disabled={submitting}
+            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-300 hover:disabled:bg-indigo-300 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            value={submitting ? "Searching..." : "Search"}
+            onClick={onSubmit}
           >
-          </input>
+            {submitting ? "Searching..." : "Search"}
+          </button>
         </div>
         <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900">
           <ul>
