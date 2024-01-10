@@ -1,5 +1,7 @@
 'use client';
 import {useCallback, useState} from "react";
+import { Spinner } from "./spinner";
+import {MagnifyingGlass} from "@/components/magnifying-glass";
 
 interface BrandSearchProps{
   search: (data: FormData) => Promise<{result: Record<string, string>} | {error: Record<string, string>}>;
@@ -44,14 +46,17 @@ export default function BrandSearch(props: BrandSearchProps) {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-300 hover:disabled:bg-indigo-300 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="flex flex-row gap-1 w-28 h-12 items-center justify-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm disabled:bg-indigo-300 hover:disabled:bg-indigo-300 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             value={submitting ? "Searching..." : "Search"}
             onClick={onSubmit}
           >
-            {submitting ? "Searching..." : "Search"}
+            {submitting ?
+                <Spinner/>:<MagnifyingGlass/>
+            }
+            Search
           </button>
         </div>
-        <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900">
+        <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900 h-40">
           <ul>
             {result ? Object.keys(result).map(entry => <><p className="text-gray-900">{entry}: {result[entry]}</p></>) : "No results yet"}
           </ul>
