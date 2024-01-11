@@ -1,14 +1,17 @@
 'use client';
-import {useCallback, useState} from "react";
-import { Spinner } from "./spinner";
+import {useCallback, useMemo, useState} from "react";
+import {Spinner} from "./spinner";
 import {MagnifyingGlass} from "@/components/magnifying-glass";
+import {SearchResponse, SearchResult} from "@/app/page";
 
-interface BrandSearchProps{
-  search: (data: FormData) => Promise<{result: Record<string, string>} | {error: Record<string, string>}>;
+interface BrandSearchProps {
+  search: (data: FormData) => Promise<SearchResponse>;
 }
+
 export default function BrandSearch(props: BrandSearchProps) {
 
-  const [result, setResult] = useState<Record<string, string>>({});
+  const [error, setError] = useState<string>('');
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [brand, setBrand] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -17,16 +20,26 @@ export default function BrandSearch(props: BrandSearchProps) {
     const formdata = new FormData();
     formdata.set('brand', brand);
     const response = await props.search(formdata);
-    if ('error' in response) {
+    if (!response.success) {
       console.error(response.error);
-      setResult(response.error);
+      setError(response.error);
       setSubmitting(false);
       return;
     }
 
-    setResult(response.result);
+    setError('');
+    setResults([
+      response,
+      ...results,
+    ]);
     setSubmitting(false);
-  }, [brand, props]);
+  }, [brand, props, results]);
+
+  const locations = useMemo<string[]>(() => {
+    const locationSet = new Set<string>();
+    results.forEach(result => Object.keys(result.results).forEach(location => locationSet.add(location)));
+    return Array.from(locationSet);
+  }, [results]);
 
   return (
     <div className="text-center">
@@ -51,17 +64,51 @@ export default function BrandSearch(props: BrandSearchProps) {
             onClick={onSubmit}
           >
             {submitting ?
-                <Spinner/>:<MagnifyingGlass/>
+              <Spinner/> : <MagnifyingGlass/>
             }
             Search
           </button>
         </div>
-        <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900 h-40">
-          <ul>
-            {result ? Object.keys(result).map(entry => <><p className="text-gray-900">{entry}: {result[entry]}</p></>) : "No results yet"}
-          </ul>
+        <div className="my-2 flex items-center justify-center gap-x-6 text-gray-900">
+          <p className="text-sm italic text-gray-600">
+            {error || ' '}
+          </p>
         </div>
       </form>
+      <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900 h-40">
+        <table className="border-separate border-spacing-x-10 border-spacing-y-2">
+          <thead>
+          <tr>
+            <th>
+              <p className="text-gray-900">Results</p>
+            </th>
+            {locations.map(location => (<>
+              <th>
+                <p className="text-gray-900">
+                  {location}
+                </p>
+              </th>
+            </>))}
+          </tr>
+          </thead>
+          <tbody>
+          {results ? results.map(entry => (<>
+            <tr>
+              <td className="text-gray-900">
+                {entry.brand}
+              </td>
+              {
+                locations.map(location => (<>
+                  <td className="text-gray-900">
+                    {entry.results[location]}
+                  </td>
+                </>))
+              }
+            </tr>
+          </>)) : "No results yet"}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

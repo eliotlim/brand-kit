@@ -1,18 +1,36 @@
 import BrandSearch from "@/components/brandsearch";
 import z from "zod";
 
+export interface SearchResult {
+  success: true;
+  brand: string;
+  results: Record<string, string>;
+}
+
+export interface SearchError {
+  success: false;
+  brand: string;
+  error: string;
+}
+
+export type SearchResponse = SearchResult | SearchError;
+
+export enum SearchStatus {
+  TAKEN = '❌',
+  AVAILABLE = '✅',
+}
+
 export default function Home() {
-  async function search(data: FormData) : Promise<{result: Record<string, string>} | {error: Record<string, string>}> {
+  async function search(data: FormData) : Promise<SearchResponse> {
     'use server';
 
     const brandInput = z.string().min(1).max(100);
     const parseBrand = brandInput.safeParse(data.get('brand'));
     if (!parseBrand.success) {
       return {
-        error: {
-          message: 'Invalid brand name',
-          zod: parseBrand.error.toString(),
-        },
+        success: false,
+        brand: data.get('brand')?.toString() ?? '',
+        error: parseBrand.error.format()._errors.toString(),
       }
     }
 
@@ -35,11 +53,13 @@ export default function Home() {
     console.log(`Github: ${github}, NPM: ${npm}, PyPI: ${pypi}, Crates: ${crates}`)
 
     return {
-      result: {
-        github: github ? '✅ Available' : '❌ Taken',
-        npm: npm ? '✅ Available' : '❌ Taken',
-        pypi: pypi ? '✅ Available' : '❌ Taken',
-        crates: crates ? '✅ Available' : '❌ Taken',
+      success: true,
+      brand: parseBrand.data,
+      results: {
+        github: github ? SearchStatus.AVAILABLE : SearchStatus.TAKEN,
+        npm: npm ? SearchStatus.AVAILABLE : SearchStatus.TAKEN,
+        pypi: pypi ? SearchStatus.AVAILABLE : SearchStatus.TAKEN,
+        crates: crates ? SearchStatus.AVAILABLE : SearchStatus.TAKEN,
       },
     };
   }
