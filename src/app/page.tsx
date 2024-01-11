@@ -15,7 +15,7 @@ export interface SearchError {
 
 export type SearchResponse = SearchResult | SearchError;
 
-export enum SearchStatus {
+enum SearchStatus {
   TAKEN = '❌',
   AVAILABLE = '✅',
 }
