@@ -2,7 +2,8 @@
 import {useCallback, useMemo, useState} from "react";
 import {Spinner} from "./spinner";
 import {MagnifyingGlass} from "@/components/magnifying-glass";
-import {SearchResponse, SearchResult} from "@/lib/types";
+import {SearchResponse} from "@/lib/types";
+import {useSearchHistory} from "@/providers/SearchHistoryProvider";
 
 interface BrandSearchProps {
   search: (data: FormData) => Promise<SearchResponse>;
@@ -11,7 +12,7 @@ interface BrandSearchProps {
 export default function BrandSearch(props: BrandSearchProps) {
 
   const [error, setError] = useState<string>('');
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const {searchResults, addSearchResult} = useSearchHistory();
   const [brand, setBrand] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -28,18 +29,15 @@ export default function BrandSearch(props: BrandSearchProps) {
     }
 
     setError('');
-    setResults([
-      response,
-      ...results,
-    ]);
+    addSearchResult(response);
     setSubmitting(false);
-  }, [brand, props, results]);
+  }, [addSearchResult, brand, props]);
 
   const locations = useMemo<string[]>(() => {
     const locationSet = new Set<string>();
-    results.forEach(result => Object.keys(result.results).forEach(location => locationSet.add(location)));
+    searchResults.forEach(result => Object.keys(result.results).forEach(location => locationSet.add(location)));
     return Array.from(locationSet);
-  }, [results]);
+  }, [searchResults]);
 
   return (
     <div className="text-center">
@@ -92,7 +90,7 @@ export default function BrandSearch(props: BrandSearchProps) {
           </tr>
           </thead>
           <tbody>
-          {results ? results.map(entry => (<>
+          {searchResults ? searchResults.map(entry => (<>
             <tr>
               <td className="text-gray-900">
                 {entry.brand}
