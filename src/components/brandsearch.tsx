@@ -2,7 +2,7 @@
 import {useCallback, useMemo, useState} from "react";
 import {Spinner} from "./spinner";
 import {MagnifyingGlass} from "@/components/magnifying-glass";
-import {SearchResponse, SearchResult} from "@/app/page";
+import {SearchResponse, SearchResult} from "@/lib/types";
 
 interface BrandSearchProps {
   search: (data: FormData) => Promise<SearchResponse>;

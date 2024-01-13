@@ -1,24 +1,6 @@
 import BrandSearch from "@/components/brandsearch";
 import z from "zod";
-
-export interface SearchResult {
-  success: true;
-  brand: string;
-  results: Record<string, string>;
-}
-
-export interface SearchError {
-  success: false;
-  brand: string;
-  error: string;
-}
-
-export type SearchResponse = SearchResult | SearchError;
-
-enum SearchStatus {
-  TAKEN = '❌',
-  AVAILABLE = '✅',
-}
+import {SearchResponse, SearchStatus} from "@/lib/types";
 
 export default function Home() {
   async function search(data: FormData) : Promise<SearchResponse> {
