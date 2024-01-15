@@ -1,3 +1,4 @@
+'use server';
 import z from "zod";
 import {SearchResponse, SearchStatus} from "@/lib/types";
 
