@@ -8,7 +8,7 @@ export const ResultsTable = () => {
   const locations = useMemo<string[]>(() => {
     const locationSet = new Set<string>();
     searchResults.forEach(result => Object.keys(result.results).forEach(location => locationSet.add(location)));
-    return Array.from(locationSet);
+    return Array.from(locationSet).reverse();
   }, [searchResults]);
 
   return (
