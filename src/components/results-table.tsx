@@ -28,13 +28,13 @@ export const ResultsTable = () => {
       </tr>
       </thead>
       <tbody>
-      {searchResults ? searchResults.map(entry => (<>
+      {searchResults ? searchResults.toReversed().map(entry => (<>
         <tr>
           <td className="text-gray-900">
             {entry.brand}
           </td>
           {
-            locations.reverse().map(location => (<>
+            locations.map(location => (<>
               <td className="text-gray-900">
                 {entry.results[location]}
               </td>
