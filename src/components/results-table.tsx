@@ -28,7 +28,7 @@ export const ResultsTable = () => {
       </tr>
       </thead>
       <tbody>
-      {searchResults ? searchResults.toReversed().map(entry => (<>
+      {searchResults ? searchResults.map(entry => (<>
         <tr>
           <td className="text-gray-900">
             {entry.brand}
@@ -41,7 +41,7 @@ export const ResultsTable = () => {
             </>))
           }
         </tr>
-      </>)) : "No results yet"}
+      </>)).reverse() : "No results yet"}
       </tbody>
     </table>
   );
