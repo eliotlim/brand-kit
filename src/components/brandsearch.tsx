@@ -9,9 +9,7 @@ export default function BrandSearch() {
         <p className="mt-6 text-base leading-7 text-gray-600">Search everywhere* for your next brand</p>
       </div>
       <SearchForm/>
-      <div className="mt-10 flex items-center justify-center gap-x-6 text-gray-900">
-        <ResultsTable/>
-      </div>
+      <ResultsTable/>
     </div>
   )
 }
