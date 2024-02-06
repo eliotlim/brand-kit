@@ -12,17 +12,17 @@ export const ResultsTable = () => {
   }, [searchResults]);
 
   return (
-    <div className="mt-10 flex flex-col items-center justify-center gap-x-6 text-gray-900">
+    <div className="mt-10 flex flex-col items-center justify-center gap-x-6 text-gray-900 dark:text-gray-100">
       {searchResults && searchResults.length > 0 &&
         <table className="border-separate border-spacing-x-10 border-spacing-y-2">
           <thead>
           <tr>
             <th>
-              <p className="text-gray-900">Results</p>
+              <p className="text-gray-900 dark:text-gray-100">Results</p>
             </th>
             {locations.map(location => (<>
               <th>
-                <p className="text-gray-900">
+                <p className="text-gray-900 dark:text-gray-100">
                   {location}
                 </p>
               </th>
@@ -32,12 +32,12 @@ export const ResultsTable = () => {
           <tbody>
           {searchResults ? searchResults.map(entry => (<>
             <tr>
-              <td className="text-gray-900">
+              <td className="text-gray-900 dark:text-gray-100">
                 {entry.brand}
               </td>
               {
                 locations.map(location => (<>
-                  <td className="text-gray-900">
+                  <td className="text-gray-900 dark:text-gray-100">
                     {entry.results[location]}
                   </td>
                 </>))
