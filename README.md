@@ -9,6 +9,8 @@ Brand Kit helps you to search multiple popular package repositories (e.g. npm, P
 
 ## Usage
 
+![Screenshot of the Brand Kit UI](screenshots/screenshot-demo-1.png)
+
 Visit [Brand Kit](https://brand-kit.vercel.app) and enter your desired brand.
 Brand Kit will search multiple package repositories and tell you if it's available.
 
