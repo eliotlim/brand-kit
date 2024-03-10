@@ -59,8 +59,6 @@ export const search = async (data: FormData): Promise<SearchResponse> => {
     }
   }
 
-  console.log(`Querying for: ${parseBrand.data}...`);
-
   const all = await Promise.allSettled(checkers.map(async (checker) => {
     return {
       namespace: checker.namespace,
