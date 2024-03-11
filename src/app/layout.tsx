@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={twMerge(inter.className, 'h-full')}>
+      <body className={twMerge(inter.className, 'flex', 'h-full', 'w-screen')}>
         {children}
         <Analytics/>
       </body>
